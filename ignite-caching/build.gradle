@@ -1,0 +1,60 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.7.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'edu.ignite'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '12'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springBootAdminVersion', "2.1.5")
+
+	//https://stackoverflow.com/questions/52652162/ignite-wont-start-with-spring-boot-2-0-5-h2-property-nested-joins-doesnt-exi
+	//https://blog.csdn.net/weixin_39139044/article/details/94138948
+	set('h2.version','1.4.197')
+}
+
+bootRun {
+	jvmArgs = ["-Xms512m", "-Xmx512m"]
+}
+
+dependencies {
+
+	//implementation 'org.apache.ignite:ignite-spring-data:2.7.5'
+	//https://issues.apache.org/jira/browse/IGNITE-6879
+	implementation 'org.apache.ignite:ignite-spring-data_2.0:2.7.5'
+
+	implementation 'org.apache.ignite:ignite-cassandra-store:2.7.5'
+	//implementation 'org.apache.ignite:ignite-web:2.7.5'
+	//implementation 'org.apache.ignite:ignite-rest-http:2.7.5'
+	//implementation 'com.datastax.cassandra:cassandra-driver-core:4.0.0'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	//implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// implementation 'de.codecentric:spring-boot-admin-starter-server'
+	// implementation 'org.apache.kafka:kafka-streams'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+	}
+}

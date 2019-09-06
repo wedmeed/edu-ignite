@@ -1,0 +1,11 @@
+<persistence keyspace="jcpenney" table="products">
+    <keyspaceOptions>
+        REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor' : 1}
+        AND DURABLE_WRITES = true
+    </keyspaceOptions>
+    <tableOption>
+        read_repair_chance = 0.2
+    </tableOption>
+    <keyPersistence class="java.lang.String" strategy="PRIMITIVE" column="uniq_id"/>
+    <valuePersistence class="edu.ignite.computing.model.Product" strategy="POJO"/>
+</persistence>
