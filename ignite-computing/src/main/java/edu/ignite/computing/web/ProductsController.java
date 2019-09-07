@@ -1,23 +1,29 @@
 package edu.ignite.computing.web;
 
+import edu.ignite.computing.model.PriceCategory;
 import edu.ignite.computing.model.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
-import org.apache.ignite.internal.util.lang.GridTuple;
+import org.apache.ignite.cache.query.QueryCursor;
+import org.apache.ignite.cache.query.SqlFieldsQuery;
 import org.apache.ignite.internal.util.lang.IgnitePair;
+import org.apache.ignite.lang.IgniteBiTuple;
+import org.apache.ignite.lang.IgniteCallable;
+import org.apache.ignite.lang.IgniteClosure;
+import org.apache.ignite.resources.IgniteInstanceResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+
+import static edu.ignite.computing.model.PriceCategory.*;
 
 @RestController
 @RequestMapping("/product/cache")
-@Slf4j
 public class ProductsController {
 
     private Ignite ignite;
@@ -35,19 +41,71 @@ public class ProductsController {
     }
 
     @GetMapping("/count")
-    public Map<String, Integer> count() {
-        Collection<Integer> results =  ignite.compute().apply(
-                (IgnitePair<Double> pair)->{
-                    log.info("Requested from {} to {}",pair.get1(), pair.get2());
-                    return 0;
+    public Map<String, Long> count() {
+        Instant start = Instant.now();
+        Collection<IgniteBiTuple<String, Long>> results = ignite.compute().apply(
+                new IgniteClosure<PriceCategory,IgniteBiTuple<String, Long>>() {
+                    @IgniteInstanceResource
+                    private Ignite ign;
+
+                    @Override
+                    public IgniteBiTuple<String, Long> apply(PriceCategory category) {
+                        String diap = "from " + category.getBottom() + " to " + category.getTop();
+                        System.out.println("Requested " + diap);
+                        SqlFieldsQuery sql = new SqlFieldsQuery(
+                                "select count(*) from Product where list_price >= " + category.getBottom() +
+                                        " AND list_price < " + category.getTop());
+
+                        IgniteBiTuple<String, Long> res = new IgniteBiTuple<>(diap, 0L);
+                        IgniteCache cache = ign.cache("ProductCache");
+                        try (QueryCursor<List<Long>> cursor = cache.query(sql)) {
+                            res.setValue(cursor.getAll().get(0).get(0));
+                        }
+                        return res;
+                    }
                 },
-                Arrays.asList(new IgnitePair<>(0.0, 50.0),
-                        new IgnitePair<>(50.0, 100.0),
-                        new IgnitePair<>(100.0, Double.POSITIVE_INFINITY))
+                Arrays.asList(CHEAP,
+                        NORMAL,
+                        EXPENSIVE)
 
         );
-        log.info("Counted {} entries", results.stream().mapToInt(Integer::intValue).sum());
-        return null;
+        Map<String, Long> res = new HashMap<>();
+        results.forEach(res::putAll);
+        res.put("Total time", Duration.between(start, Instant.now()).toMillis());
+        return res;
+    }
+
+    @GetMapping("/countLocally")
+    public Map<String, Long> countLocally() {
+        Instant start = Instant.now();
+        Collection<Map<String, Long>> results = ignite.compute().broadcast(
+                new IgniteCallable<Map<String, Long>>() {
+                    @IgniteInstanceResource
+                    private Ignite ign;
+
+                    @Override
+                    public Map<String, Long> call() throws Exception {
+                        Map<String, Long> result = new HashMap<>();
+                        for (PriceCategory category : Arrays.asList(CHEAP, NORMAL, EXPENSIVE)) {
+                            String diap = "from " + category.getBottom() + " to " + category.getTop();
+                            SqlFieldsQuery sql = new SqlFieldsQuery(
+                                    "select count(*) from Product where list_price >= " + category.getBottom() +
+                                            " AND list_price < " + category.getTop()).setLocal(true);
+                            IgniteCache cache = ign.cache("ProductCache");
+                            try (QueryCursor<List<Long>> cursor = cache.query(sql)) {
+                                result.put(diap, cursor.getAll().get(0).get(0));
+                            }
+                        }
+                        System.out.println(result);
+                        return result;
+                    }
+                });
+        Map<String, Long> res = new HashMap<>();
+        results.forEach(map->
+                map.forEach((key, value)->
+                        res.put(key, res.getOrDefault(key,0L) + value)));
+        res.put("Total time", Duration.between(start, Instant.now()).toMillis());
+        return res;
     }
 
 

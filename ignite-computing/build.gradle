@@ -39,13 +39,13 @@ bootRun {
     jvmArgs = ["-Xms512m",
                "-Xmx512m",
                "-Djava.net.preferIPv4Stack=true",
-//               "-Djdk.tls.client.protocols=TLSv1.2",
-//               "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
-//               "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED",
-//               "--add-exports=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED",
-//               "--add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED",
-//               "--add-exports=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED",
-//               "--illegal-access=permit"
+               "-Djdk.tls.client.protocols=TLSv1.2",
+               "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
+               "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED",
+               "--add-exports=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED",
+               "--add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED",
+               "--add-exports=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED",
+               "--illegal-access=permit"
     ]
 }
 
@@ -61,7 +61,6 @@ docker {
 dependencies {
     implementation 'org.apache.ignite:ignite-cassandra-store:2.7.5'
     implementation 'org.apache.ignite:ignite-spring-data:2.7.5'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
