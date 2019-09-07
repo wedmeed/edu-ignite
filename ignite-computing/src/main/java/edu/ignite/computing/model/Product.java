@@ -1,6 +1,8 @@
 package edu.ignite.computing.model;
 
 import lombok.Data;
+import org.apache.ignite.cache.affinity.AffinityKey;
+import org.apache.ignite.cache.affinity.AffinityKeyMapped;
 import org.apache.ignite.cache.query.annotations.QuerySqlField;
 
 import java.math.BigDecimal;
@@ -14,6 +16,7 @@ public class Product {
     String name_title;
     String description;
     @QuerySqlField
+    @AffinityKeyMapped
     BigDecimal list_price;
     BigDecimal sale_price;
     String category;
