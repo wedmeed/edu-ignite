@@ -85,6 +85,7 @@ public class ProductsController {
 
                     @Override
                     public Map<String, Long> call() throws Exception {
+                        Instant localStart = Instant.now();
                         Map<String, Long> result = new HashMap<>();
                         for (PriceCategory category : Arrays.asList(CHEAP, NORMAL, EXPENSIVE)) {
                             String diap = "from " + category.getBottom() + " to " + category.getTop();
@@ -96,6 +97,7 @@ public class ProductsController {
                                 result.put(diap, cursor.getAll().get(0).get(0));
                             }
                         }
+                        System.out.println("Done in " + Duration.between(localStart, Instant.now()).toMillis());
                         System.out.println(result);
                         return result;
                     }
