@@ -26,6 +26,7 @@ Reviews TEXT); ```
 1. download data from csv: ``` COPY jcpenney.products (uniq_id,sku,name_title,description,list_price,sale_price,category,category_tree,average_product_rating,product_url,product_image_urls,brand,total_number_reviews,Reviews)
 FROM '/var/lib/cassandra/jcpenney_com-ecommerce_sample.csv' 
 WITH DELIMITER=',' AND HEADER=TRUE AND ESCAPE='"'; ```
-1. Run application
-1. get data by http://localhost:8080/product/{id}
+1. Run application by ```gradlew bootRun```
+1. work by the Postman with Ignite-caching.postman_collection.json
+1. see metrics through JMX under ```org.apache```
 

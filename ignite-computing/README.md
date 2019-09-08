@@ -1,7 +1,7 @@
 # ignite-computing
 Demo project for Ignite compute grid
 
-1. start some instances of application
+1. start some instances of application (```gradlew bootRun```)
 2. for any of them check working port:
 ``` 2019-09-07 16:36:23.409  INFO 24891 --- [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port(s): 61904```
 3. put port into following URLs and invoke them:
