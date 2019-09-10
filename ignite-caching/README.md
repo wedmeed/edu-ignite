@@ -27,6 +27,8 @@ Reviews TEXT); ```
 FROM '/var/lib/cassandra/jcpenney_com-ecommerce_sample.csv' 
 WITH DELIMITER=',' AND HEADER=TRUE AND ESCAPE='"'; ```
 1. Run application by ```gradlew bootRun```
-1. work by the Postman with Ignite-caching.postman_collection.json
+1. work by the Postman with Ignite-caching.postman_collection.json or by follow links:
+    - ```http://localhost:8080/product/{id}```
+    - ```http://localhost:8080/product/{id}/price?price=4340.4```
 1. see metrics through JMX under ```org.apache```
 
