@@ -31,8 +31,8 @@ if you wish to have net of application with pure ignite instances then:
  
 ### Possible workaround
 gradlew dockerBuildImage
-docker run --name bootignite -e "CONFIG_URI=file:///tmp/config.xml" -v "$DOCKER_STORAGES/ignite-storage":/tmp edu.ignite.computinf:0.0.1-SNAPSHOT
-docker run --name myignite -e "CONFIG_URI=file:///tmp/config.xml" -v "$DOCKER_STORAGES/ignite-storage":/tmp apacheignite:ignite
+- ```docker run --name bootignite -e "CONFIG_URI=file:///tmp/config.xml" -v "$DOCKER_STORAGES/ignite-storage":/tmp edu.ignite.computinf:0.0.1-SNAPSHOT```
+- ```docker run --name myignite -e "CONFIG_URI=file:///tmp/config.xml" -v "$DOCKER_STORAGES/ignite-storage":/tmp apacheignite:ignite```
 
 
 
