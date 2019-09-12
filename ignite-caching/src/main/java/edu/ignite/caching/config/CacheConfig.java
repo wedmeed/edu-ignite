@@ -80,11 +80,11 @@ public class CacheConfig {
         return ignite;
     }
 
-    @Bean
-    public SpringTransactionManager transactionManager(Ignite ignite) {
-        SpringTransactionManager mngr = new SpringTransactionManager();
-        mngr.setIgniteInstanceName(ignite.name());
-        mngr.setTransactionConcurrency(TransactionConcurrency.PESSIMISTIC);
-        return mngr;
-    }
+//    @Bean
+//    public SpringTransactionManager transactionManager(Ignite ignite) {
+//        SpringTransactionManager mngr = new SpringTransactionManager();
+//        mngr.setIgniteInstanceName(ignite.name());
+//        mngr.setTransactionConcurrency(TransactionConcurrency.PESSIMISTIC);
+//        return mngr;
+//    }
 }
