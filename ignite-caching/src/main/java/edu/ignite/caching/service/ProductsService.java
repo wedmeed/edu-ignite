@@ -24,11 +24,10 @@ public class ProductsService {
 
     public Boolean updatePrice(String id, Double newPrice) {
         return cache.invoke(id, (entry, args) -> {
-            Product value = entry.getValue();
-            BigDecimal newNormalizedPrice = new BigDecimal((Double) args[0]).setScale(2, RoundingMode.HALF_UP);
-            if (!value.getList_price().equals(newNormalizedPrice)) {
-                value.setList_price(
-                        new BigDecimal((Double) args[0]).setScale(2, RoundingMode.HALF_UP));
+            if (entry.exists()) {
+                Product value = entry.getValue();
+                BigDecimal newNormalizedPrice = new BigDecimal((Double) args[0]).setScale(2, RoundingMode.HALF_UP);
+                value.setList_price(newNormalizedPrice);
                 entry.setValue(value);
                 return true;
             }
