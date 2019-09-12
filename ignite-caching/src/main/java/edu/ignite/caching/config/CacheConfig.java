@@ -76,7 +76,7 @@ public class CacheConfig {
         // "Failed to execute compound future reducer: GridDhtLockFuture"
         ignite.cache("ProductCache").put("null", new Product());
 
-        ignite.cache("ProductCache").loadCache(null);
+        //ignite.cache("ProductCache").loadCache(null);
         return ignite;
     }
 
