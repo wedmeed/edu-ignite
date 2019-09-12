@@ -3,8 +3,9 @@ package edu.ignite.caching.service;
 import edu.ignite.caching.dao.ProductsRepository;
 import edu.ignite.caching.model.Product;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteCache;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,25 +15,25 @@ import java.math.RoundingMode;
 public class ProductsService {
 
     private ProductsRepository repository;
+    private IgniteCache<String, Product> cache;
 
-    public ProductsService(ProductsRepository repository) {
+    public ProductsService(ProductsRepository repository, Ignite ignite) {
         this.repository = repository;
+        this.cache = ignite.cache("ProductCache");
     }
 
-
-    @Transactional
     public Boolean updatePrice(String id, Double newPrice) {
-        log.debug("before read");
-        var productWrap = repository.findById(id);
-        if (productWrap.isPresent()) {
-            var product = productWrap.get();
-            product.setList_price(new BigDecimal(newPrice).setScale(2, RoundingMode.HALF_UP));
-            log.debug("before write");
-            repository.save(id, product);
-            log.debug("after write");
-            return true;
-        }
-        return false;
+        return cache.invoke(id, (entry, args) -> {
+            Product value = entry.getValue();
+            BigDecimal newNormalizedPrice = new BigDecimal((Double) args[0]).setScale(2, RoundingMode.HALF_UP);
+            if (!value.getList_price().equals(newNormalizedPrice)) {
+                value.setList_price(
+                        new BigDecimal((Double) args[0]).setScale(2, RoundingMode.HALF_UP));
+                entry.setValue(value);
+                return true;
+            }
+            return false;
+        }, newPrice);
     }
 
     public Product getProduct(String id) {
