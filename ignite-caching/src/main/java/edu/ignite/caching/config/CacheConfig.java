@@ -48,7 +48,7 @@ public class CacheConfig {
         cacheStoreFactory.setPersistenceSettings(persistenceSettings);
         ccfg.setCacheStoreFactory(cacheStoreFactory);
 
-        ccfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
+//        ccfg.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
 
         ccfg.setWriteThrough(true);
 //        ccfg.setWriteBehindEnabled(true);
