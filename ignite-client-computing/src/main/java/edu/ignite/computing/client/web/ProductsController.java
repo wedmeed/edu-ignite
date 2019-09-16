@@ -49,6 +49,7 @@ public class ProductsController {
 
                     @Override
                     public IgniteBiTuple<String, Long> apply(PriceCategory category) {
+                        Instant localStart = Instant.now();
                         String diap = "from " + category.getBottom() + " to " + category.getTop();
                         System.out.println("Requested " + diap);
                         SqlFieldsQuery sql = new SqlFieldsQuery(
@@ -60,6 +61,7 @@ public class ProductsController {
                         try (QueryCursor<List<Long>> cursor = cache.query(sql)) {
                             res.setValue(cursor.getAll().get(0).get(0));
                         }
+                        System.out.println("Done in " + Duration.between(localStart, Instant.now()).toMillis());
                         return res;
                     }
                 },
