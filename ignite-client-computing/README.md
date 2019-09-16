@@ -20,7 +20,7 @@ distributed over instances
    http://localhost:8080/product/cache/countLocally
    ```
 
-## Docker launch
+### Docker launch
 1. launch ignite docker instances
     ```
     docker build . --tag=myignite -f server-dockerfile 
@@ -34,7 +34,7 @@ distributed over instances
     docker run -d --name my-ignite-client -p 8080:8080 edu.ignite.computing
     ```
 
-## Local launch
+### Local launch
 1. install ignite to `$IGNITE_HOME`
 3. copy artifacts to ignite
     ```
@@ -49,6 +49,6 @@ distributed over instances
 3. start application `./gradlew bootRun`
 
 
-### References
+## References
 http://apache-ignite-users.70518.x6.nabble.com/Loadcache-behavior-td2571.html
 https://apacheignite.readme.io/docs/data-loading#ignitecacheloadcache
