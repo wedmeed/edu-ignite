@@ -17,7 +17,7 @@ plugins {
 
 group = 'edu.ignite'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '12'
+sourceCompatibility = '1.8'
 
 configurations {
     compileOnly {
@@ -39,32 +39,32 @@ bootRun {
     jvmArgs = ["-Xms512m",
                "-Xmx512m",
                "-Djava.net.preferIPv4Stack=true",
-               "-Djdk.tls.client.protocols=TLSv1.2",
-               "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
-               "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED",
-               "--add-exports=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED",
-               "--add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED",
-               "--add-exports=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED",
-               "--illegal-access=permit"
+//               "-Djdk.tls.client.protocols=TLSv1.2",
+//               "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
+//               "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED",
+//               "--add-exports=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED",
+//               "--add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED",
+//               "--add-exports=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED",
+//               "--illegal-access=permit"
     ]
 }
 
-//docker {
-//    springBootApplication {
-//        baseImage = 'openjdk:12-alpine'
-//        ports = [9001, 8080, 47500, 10800]
-//        tag = 'edu.ignite.computinf:0.0.1-SNAPSHOT'
-////        jvmArgs = ['-Dspring.profiles.active=production', '-Xmx2048m']
-//    }
-//}
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:8-alpine'
+        ports = [8080]
+        tag = 'edu.ignite.computing'
+//        jvmArgs = ['-Dspring.profiles.active=production', '-Xmx2048m']
+    }
+}
 
-//task fatJar(type: Jar) {
-//    manifest {
-//        attributes 'Main-Class': 'edu.ignite.computing.client.IgniteComputingApplication'
-//    }
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    with jar
-//}
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'edu.ignite.computing.client.IgniteComputingApplication'
+    }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 
 dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.9.9'

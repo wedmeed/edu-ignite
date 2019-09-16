@@ -35,7 +35,14 @@ public class CacheConfig {
 
     @Bean
     public Ignite igniteInstance() {
+        //excess because this is by default
+//        TcpDiscoveryMulticastIpFinder ipFinder = new TcpDiscoveryMulticastIpFinder();
+//        ipFinder.setAddresses(Arrays.asList("127.0.0.1:47500..47509"));
+//        TcpDiscoverySpi spi = new TcpDiscoverySpi();
+//        spi.setIpFinder(ipFinder);
+
         IgniteConfiguration cfg = new IgniteConfiguration();
+//        cfg.setDiscoverySpi(spi);
         cfg.setClientMode(true);
         cfg.setPeerClassLoadingEnabled(true);
 

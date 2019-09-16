@@ -1,0 +1,5 @@
+FROM apacheignite/ignite
+
+COPY build/libs/* /opt/ignite/apache-ignite/libs/
+COPY jcpenney_com-ecommerce_sample.csv /tmp/ignite-data/
+COPY server-config.xml /tmp/

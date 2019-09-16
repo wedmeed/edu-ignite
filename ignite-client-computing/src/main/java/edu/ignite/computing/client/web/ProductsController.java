@@ -98,8 +98,8 @@ public class ProductsController {
                                 result.put(diap, cursor.getAll().get(0).get(0));
                             }
                         }
-                        System.out.println("Done in " + Duration.between(localStart, Instant.now()).toMillis());
                         System.out.println(result);
+                        System.out.println("Done in " + Duration.between(localStart, Instant.now()).toMillis());
                         return result;
                     }
                 });
