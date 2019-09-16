@@ -12,6 +12,7 @@ import org.apache.ignite.lang.IgniteCallable;
 import org.apache.ignite.lang.IgniteClosure;
 import org.apache.ignite.resources.IgniteInstanceResource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,10 +32,10 @@ public class ProductsController {
         this.ccfg = ccfg;
     }
 
-    @GetMapping("/load")
-    public String loadCache() {
+    @GetMapping("/load/{filename}")
+    public String loadCache(@PathVariable String filename) {
         IgniteCache<String, Product> cache = ignite.getOrCreateCache(ccfg);
-        cache.loadCache(null, "/Users/asokolov/Desktop/edu/ignite/ignite-caching/jcpenney_com-ecommerce_sample.csv");
+        cache.loadCache(null, filename);
         return "OK";
     }
 
